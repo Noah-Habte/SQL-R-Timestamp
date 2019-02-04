@@ -10,7 +10,7 @@ ActivityDate AS DueDate,
 CreatedById AS CreatedBy,
 Skill_Name__c AS IVRSkill,
 WhoId AS WhoId,
-TIMESTAMP(DATETIME(CreatedDate,'America/Denver')) AS ActivityCreatedTime,
+**TIMESTAMP(DATETIME(CreatedDate,'America/Denver')) AS ActivityCreatedTime,**
 CallDurationInSeconds AS CallDuration,
 CallType AS CallType,
 Activity_Channel__c	AS ActivityChannel,
