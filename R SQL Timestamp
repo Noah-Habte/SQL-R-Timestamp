@@ -1,0 +1,39 @@
+
+sql_Tasks <- "
+SELECT
+Id AS ActivityId,
+Caller_ID__c AS ActivityANI,
+inContact_Contact_ID__c AS InContactContactID,
+WhatId AS RelatedTo,
+OwnerId AS ActivityCreatedBy,
+ActivityDate AS DueDate,
+CreatedById AS CreatedBy,
+Skill_Name__c AS IVRSkill,
+WhoId AS WhoId,
+TIMESTAMP(DATETIME(CreatedDate,'America/Denver')) AS ActivityCreatedTime,
+CallDurationInSeconds AS CallDuration,
+CallType AS CallType,
+Activity_Channel__c	AS ActivityChannel,
+Activity_Reason__c AS ActivityReason,
+Activity_Subset_Reason__c	AS ActivitySubset,
+Description AS ActivityNotes,
+RecordTypeId AS ActivityRecordTypeId,
+Related_To_Id__c AS RelatedToField
+
+FROM 
+SOPS.SFDC_TASK_V
+
+WHERE
+inContact_Contact_ID__c IS NOT NULL AND
+DATE(DATETIME(CreatedDate,'America/Denver')) > '2019-01-30'
+"
+
+rawActivitiesInc <- query_exec(sql_Tasks, project = project, quiet=FALSE,
+                            use_legacy_sql = FALSE,
+                            max_pages = Inf)
+
+rawActivitiesInc <- rawActivitiesInc %>%
+  subset(ActivityCreatedTime<Last_RunDate) %>%
+  arrange(desc(ActivityCreatedTime))
+
+rawActivities <- rbind(rawActivities,rawActivitiesInc)
